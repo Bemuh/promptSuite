@@ -1,0 +1,13 @@
+{
+  "name": "ai-flow-studio",
+  "version": "1.0.0",
+  "description": "AI Flow Studio - Pro: A browser-based modular prompt builder",
+  "scripts": {
+    "test": "npx playwright test",
+    "test:ui": "npx playwright test --ui",
+    "test:headed": "npx playwright test --headed"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.49.0"
+  }
+}

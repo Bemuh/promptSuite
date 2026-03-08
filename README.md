@@ -9,7 +9,7 @@ A single-file, browser-based prompt builder for AI assistants. Create reusable, 
 1. Open `index.html` in any modern browser.
 2. Write a template in the **Instruction Template** editor using `{{VARIABLE}}` placeholders.
 3. Fill in the generated input fields below the template.
-4. Click **"Generate & Copy Prompt"** — your assembled prompt is now on the clipboard.
+4. Click **"Preview"** to inspect the assembled prompt, or **"Generate & Copy Prompt"** to copy it to clipboard.
 
 No server, no dependencies, no installation required.
 
@@ -27,7 +27,9 @@ Each flow is an independent prompt workspace. Use multiple flows to organize dif
 | Switch flows | Click a flow name in the sidebar |
 | Rename a flow | Double-click the flow name |
 | Reorder flows | Drag and drop flows in the sidebar |
-| Delete a flow | Click the **✕** button on the tab |
+| Duplicate a flow | Click the **&#9783;** button on the tab |
+| Delete a flow | Click the **&#10005;** button on the tab |
+| Search flows | Type in the search bar at the top of the sidebar |
 
 > You cannot delete the last remaining flow.
 
@@ -40,7 +42,7 @@ An optional section for system-level instructions (persona, rules, constraints).
 
 ### Instruction Template
 
-The main body of your prompt. Write instructions here using `{{PLACEHOLDER}}` syntax to create dynamic fields.
+The main body of your prompt. Write instructions here using `{{PLACEHOLDER}}` syntax to create dynamic fields. When the template is empty, a helpful placeholder shows example syntax.
 
 **Example template:**
 ```
@@ -51,6 +53,13 @@ Translate the following text to {{LANGUAGE}}:
 ```
 
 This automatically creates three input fields: `ROLE`, `LANGUAGE`, and `TEXT`.
+
+**Variable tag chips** appear below the template showing detected variables at a glance:
+- Blue chips for local variables `{{VAR}}`
+- Purple chips for shared variables `{{SHARED:x}}`
+- Green chips for linked flows `{{TAB:x}}`
+
+Click a chip to scroll to its input field.
 
 ### Dynamic Variables
 
@@ -80,6 +89,14 @@ Use `{{TAB:FlowName}}` to embed the **generated output** of another flow into th
 
 > Circular dependencies are detected and will show an error message instead of looping.
 
+### Preview
+
+Click **"Preview"** to see the fully assembled prompt in a modal before copying. The preview highlights:
+- **Unresolved variables** (yellow) — `{{TAG}}` placeholders that weren't filled in.
+- **Errors** (red) — circular dependencies or missing flow references.
+
+You can copy directly from the preview panel.
+
 ### Generate & Copy
 
 Click **"Generate & Copy Prompt"** to:
@@ -91,9 +108,21 @@ Click **"Generate & Copy Prompt"** to:
 
 ---
 
+## Keyboard Shortcuts
+
+| Shortcut | Action |
+|---|---|
+| **Ctrl+Enter** | Generate & Copy prompt |
+| **Ctrl+Shift+N** | Create a new flow |
+| **Escape** | Close modals and menus |
+| **Tab** (in editor) | Insert a tab character |
+| **Enter** (in editor) | Auto-indent based on current line |
+
+---
+
 ## Menus
 
-### Sidebar Menu (☰)
+### Sidebar Menu (&#9776;)
 
 Click the **"Flows"** header in the sidebar to open the settings menu.
 
@@ -104,17 +133,18 @@ Click the **"Flows"** header in the sidebar to open the settings menu.
 | **Tutorial / Help** | Open the in-app tutorial with full feature documentation |
 | **Export Config** | Download all flows and shared variables as a JSON file |
 | **Import Config** | Load a previously exported JSON file to restore flows |
-| **Clear Studio Data** | Delete all flows, variables, and settings permanently |
+| **Clear Studio Data** | Delete all app-specific flows, variables, and settings |
 
-### Gear Menu (⚙)
+### Gear Menu (&#9881;)
 
-Click the **⚙** button next to "Generate & Copy Prompt".
+Click the **&#9881;** button next to "Generate & Copy Prompt".
 
 | Option | Description |
 |---|---|
 | **Download .md** | Save the current template as a Markdown file |
+| **Download Output (.txt)** | Save the fully resolved prompt as a text file |
 | **Copy Sys Only** | Copy just the system prompt to the clipboard |
-| **Clear Inputs** | Reset all variable values in the current flow |
+| **Clear Inputs** | Reset all variable values in the current flow (with 5-second undo) |
 
 ---
 
@@ -128,14 +158,20 @@ Click the **⚙** button next to "Generate & Copy Prompt".
 
 ---
 
-## Character Counts
+## Character & Token Counts
 
 The info bar at the bottom of the workspace shows:
 
 - **Sys** — character count of the system prompt.
 - **Tpl** — character count of the instruction template.
 - **Dynamic Vars** — combined character count of all variable inputs.
-- **Total Pipeline** — sum of all the above.
+- **Total Pipeline** — sum of all the above, plus approximate token count (~chars/4).
+
+---
+
+## Toast Notifications
+
+Status messages (copied, saved, errors) appear as toast notifications in the top-right corner. They auto-dismiss after 3 seconds. Some toasts include an **Undo** button (e.g., after clearing inputs).
 
 ---
 
@@ -148,13 +184,44 @@ The info bar at the bottom of the workspace shows:
 ### Export / Import
 
 - **Export** creates a JSON file containing all flows and shared variables.
-- **Import** accepts either:
-  - The full export format (`{ tabs: [...], sharedStore: {...} }`)
-  - A legacy array-only format (`[...]`)
+- **Import** validates the file structure before applying:
+  - Checks that tabs have required fields (`id`, `name`, `template`, etc.)
+  - Shows a summary modal ("Found X flows and Y shared variables") before replacing data
+  - Adds default values for any missing fields (forward compatibility)
+  - Accepts both full format (`{ tabs: [...], sharedStore: {...} }`) and legacy array format (`[...]`)
 
 ### Clear Studio Data
 
-Removes all localStorage entries and resets to a single default flow. **This cannot be undone.**
+Removes only app-specific localStorage keys (not all origin data) and resets to a single default flow. **This cannot be undone.**
+
+---
+
+## Accessibility
+
+- Flow tabs use `<button>` elements with `role="tab"` and `aria-selected`
+- The tabs container has `role="tablist"`
+- Collapsible sections have `aria-expanded` and `aria-controls`
+- Modals have `role="dialog"` and `aria-modal="true"`
+- Focus returns to the trigger element when modals close
+- Modal confirm button receives focus on open
+- All interactive elements are keyboard-accessible
+
+---
+
+## Responsive / Mobile
+
+On screens narrower than 768px:
+- The sidebar becomes a slide-in drawer toggled by a hamburger button
+- A top bar shows the current flow name
+- Layout stacks vertically
+- Buttons have larger touch targets (44px minimum)
+- The sidebar resize handle is hidden
+
+---
+
+## Resizable Sidebar
+
+On desktop, drag the right edge of the sidebar to resize it (150px–400px). The width is saved in localStorage.
 
 ---
 
@@ -167,7 +234,7 @@ The app supports two languages:
 | English | `en` | Default |
 | Spanish | `es` | Toggle via sidebar menu |
 
-All UI labels, button text, modal messages, placeholders, status messages, and the tutorial content are fully translated.
+All UI labels, button text, modal messages, placeholders, status messages, tutorial content, and toast notifications are fully translated.
 
 ---
 
@@ -184,6 +251,7 @@ All UI labels, button text, modal messages, placeholders, status messages, and t
   - `theme_mode_v12` — `"dark"` or `"light"`
   - `app_lang_v12` — `"en"` or `"es"`
   - `modular_shared_v12` — shared variable store
+  - `sidebar_width_v12` — sidebar width in pixels
 
 ---
 

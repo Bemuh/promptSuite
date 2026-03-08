@@ -60,6 +60,25 @@
             border-right: 1px solid var(--border-color);
             height: 100vh;
             overflow: hidden;
+            position: relative;
+            transition: width 0.1s ease, min-width 0.1s ease;
+        }
+
+        .sidebar-resize-handle {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 6px;
+            height: 100%;
+            cursor: col-resize;
+            z-index: 10;
+            background: transparent;
+            transition: background 0.2s;
+        }
+
+        .sidebar-resize-handle:hover,
+        .sidebar-resize-handle.active {
+            background: var(--accent-blue);
         }
 
         .nav-sidebar-header {
@@ -71,6 +90,50 @@
             letter-spacing: 0.05em;
             border-bottom: 1px solid var(--border-color);
             flex-shrink: 0;
+        }
+
+        .search-container {
+            padding: 8px 10px;
+            border-bottom: 1px solid var(--border-color);
+            flex-shrink: 0;
+        }
+
+        .search-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-input {
+            width: 100%;
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            color: var(--text-main);
+            font-size: 0.75rem;
+            padding: 6px 24px 6px 8px;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        .search-input:focus {
+            border-color: var(--accent-blue);
+        }
+
+        .search-clear {
+            position: absolute;
+            right: 4px;
+            background: none;
+            border: none;
+            color: var(--text-dim);
+            cursor: pointer;
+            font-size: 12px;
+            padding: 2px 4px;
+            display: none;
+        }
+
+        .search-clear.visible {
+            display: block;
         }
 
         .tabs-container {
@@ -104,20 +167,25 @@
             border: none;
             border-left: 3px solid transparent;
             border-radius: 0;
+            box-sizing: border-box;
             color: var(--text-dim);
             font-size: 0.8rem;
             font-weight: 600;
             display: flex;
             align-items: center;
             gap: 8px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
             transition: all 0.2s;
+            width: 100%;
+            text-align: left;
         }
 
         .tab:hover {
             background: var(--button-blue);
+        }
+
+        .tab:focus-visible {
+            outline: 1px solid var(--accent-blue);
+            outline-offset: -1px;
         }
 
         .tab:active {
@@ -130,19 +198,48 @@
             border-left: 3px solid var(--accent-blue);
         }
 
+        .tab-label {
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
         .tab-rename-input {
             background: var(--input-bg);
             border: 1px solid var(--accent-blue);
             color: var(--text-main);
             font-family: inherit;
             font-size: inherit;
-            width: 100px;
+            width: 70px;
             outline: none;
             border-radius: 4px;
             padding: 2px 5px;
         }
 
-        .tab-close {
+        .tab-actions {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            margin-left: auto;
+            flex-shrink: 0;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateX(4px);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+
+        .tab:hover .tab-actions,
+        .tab:focus-visible .tab-actions,
+        .tab:focus-within .tab-actions,
+        .tab.active .tab-actions {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateX(0);
+        }
+
+        .tab-action-btn {
             width: 18px;
             height: 18px;
             border-radius: 40px;
@@ -151,14 +248,24 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-left: auto;
-            flex-shrink: 0;
+            background: none;
+            border: none;
+            color: inherit;
+            cursor: pointer;
+            padding: 0;
         }
 
-        .tab-close:hover {
+        .tab-action-btn:hover {
+            opacity: 1;
+        }
+
+        .tab-action-btn.duplicate:hover {
+            color: var(--accent-blue);
+        }
+
+        .tab-action-btn.close:hover {
             background: #ef4444;
             color: white;
-            opacity: 1;
         }
 
         .add-tab-btn {
@@ -267,7 +374,7 @@
             border: none;
             color: var(--text-dim);
             cursor: pointer;
-            font-size: 10px;
+            font-size: 12px;
             font-weight: bold;
             text-transform: uppercase;
             padding: 0;
@@ -279,6 +386,12 @@
 
         .section-toggle-btn:hover {
             color: var(--accent-blue);
+        }
+
+        .section-divider {
+            border: none;
+            border-top: 1px solid var(--border-color);
+            margin: 15px 0;
         }
 
         .collapsible-content.collapsed {
@@ -352,6 +465,46 @@
         .editor-wrapper textarea:focus {
             border: none;
             outline: none;
+        }
+
+        /* Variable Tag Chips */
+        .tag-chips-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+
+        .tag-chip {
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .tag-chip:hover {
+            opacity: 0.8;
+        }
+
+        .tag-chip.local {
+            background: rgba(96, 165, 250, 0.15);
+            color: #60a5fa;
+            border-color: rgba(96, 165, 250, 0.3);
+        }
+
+        .tag-chip.shared {
+            background: rgba(168, 85, 247, 0.15);
+            color: #a855f7;
+            border-color: rgba(168, 85, 247, 0.3);
+        }
+
+        .tag-chip.linked {
+            background: rgba(34, 197, 94, 0.15);
+            color: #22c55e;
+            border-color: rgba(34, 197, 94, 0.3);
         }
 
         .info-summary-bar {
@@ -474,16 +627,224 @@
             text-transform: uppercase;
             margin-left: 6px;
         }
+
+        /* Preview Panel */
+        .preview-output {
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 15px;
+            font-family: "Cascadia Code", monospace;
+            font-size: 12px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-break: break-word;
+            text-align: left;
+            max-height: 50vh;
+            overflow-y: auto;
+            margin-bottom: 15px;
+        }
+
+        .preview-output .unresolved {
+            background: rgba(234, 179, 8, 0.2);
+            color: #eab308;
+            padding: 1px 4px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+
+        .preview-output .error-tag {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            padding: 1px 4px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+
+        .preview-warning {
+            font-size: 0.8rem;
+            color: #eab308;
+            margin-bottom: 10px;
+            text-align: left;
+        }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .toast {
+            background: var(--container-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--accent-blue);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: toastIn 0.3s ease-out;
+            min-width: 200px;
+        }
+
+        .toast.toast-exit {
+            animation: toastOut 0.3s ease-in forwards;
+        }
+
+        .toast-close {
+            background: none;
+            border: none;
+            color: var(--text-dim);
+            cursor: pointer;
+            font-size: 14px;
+            margin-left: auto;
+            padding: 0 4px;
+        }
+
+        .toast-undo {
+            background: none;
+            border: 1px solid var(--accent-blue);
+            color: var(--accent-blue);
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-left: 4px;
+        }
+
+        .toast-undo:hover {
+            background: var(--accent-blue);
+            color: var(--bg-color);
+        }
+
+        @keyframes toastIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes toastOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+
+        /* Mobile hamburger (hidden on desktop) */
+        .mobile-top-bar {
+            display: none;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 15px;
+            background: var(--container-bg);
+            border-bottom: 1px solid var(--border-color);
+            flex-shrink: 0;
+        }
+
+        .mobile-hamburger {
+            background: none;
+            border: none;
+            color: var(--accent-blue);
+            font-size: 1.4rem;
+            cursor: pointer;
+            padding: 4px 8px;
+        }
+
+        .mobile-flow-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-main);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 299;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+
+            .mobile-top-bar {
+                display: flex;
+            }
+
+            .nav-sidebar {
+                position: fixed;
+                top: 0; left: 0;
+                width: 260px !important;
+                min-width: 260px !important;
+                z-index: 300;
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            .nav-sidebar.mobile-open {
+                transform: translateX(0);
+            }
+
+            .sidebar-overlay.visible {
+                display: block;
+            }
+
+            .sidebar-resize-handle {
+                display: none;
+            }
+
+            .content-area {
+                padding: 15px;
+                height: calc(100vh - 50px);
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            button.primary-btn {
+                min-height: 44px;
+            }
+
+            .btn-util {
+                min-height: 44px;
+            }
+        }
     </style>
 </head>
 
 <body class="dark-theme">
 
-    <nav class="nav-sidebar">
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <div class="mobile-top-bar" id="mobile-top-bar">
+        <button class="mobile-hamburger" id="mobile-hamburger-btn" aria-label="Toggle sidebar">&#9776;</button>
+        <span class="mobile-flow-name" id="mobile-flow-name"></span>
+    </div>
+
+    <nav class="nav-sidebar" id="nav-sidebar">
+        <div class="sidebar-resize-handle" id="sidebar-resize-handle"></div>
         <div class="nav-sidebar-header" id="nav-header-action"
             style="cursor: pointer; display: flex; justify-content: space-between; align-items: center; position: relative;">
             <span>Flows</span>
-            <span style="font-size: 0.65rem; opacity: 0.6;">☰</span>
+            <span style="font-size: 0.65rem; opacity: 0.6;">&#9776;</span>
             <div id="menu-dropdown" class="menu-dropdown"
                 style="position: absolute; top: 100%; left: 0; right: 0; border-radius: 0; border-left: none; border-right: none;">
                 <button class="btn-util" id="btn-theme-toggle">Theme: Dark</button>
@@ -494,12 +855,18 @@
                 <button class="btn-util" onclick="triggerImport()" id="lang-import">Import Config</button>
                 <button class="btn-util" style="color: #f87171;" onclick="showModal('clear_storage')"
                     id="lang-clear-storage">Clear Studio Data</button>
-                <input type="file" id="importFile" class="hidden" onchange="importData(event)">
+                <input type="file" id="importFile" class="hidden" accept=".json" onchange="importData(event)">
+            </div>
+        </div>
+        <div class="search-container">
+            <div class="search-input-wrapper">
+                <input type="text" class="search-input" id="flow-search" placeholder="Search flows..." autocomplete="off">
+                <button class="search-clear" id="flow-search-clear">&times;</button>
             </div>
         </div>
         <button class="add-tab-btn" id="add-tab-action">+ New Flow</button>
         <div class="tabs-container">
-            <div id="tabs-list" class="tabs"></div>
+            <div id="tabs-list" class="tabs" role="tablist"></div>
         </div>
     </nav>
 
@@ -510,7 +877,7 @@
                 <div class="container">
                     <div style="display:flex; justify-content: space-between; align-items: center;">
                         <button class="section-toggle-btn" onclick="toggleSection('system-wrapper')"
-                            id="lang-toggle-sys">System Block ▾</button>
+                            id="lang-toggle-sys" aria-expanded="true" aria-controls="system-wrapper">System Block &#9662;</button>
                         <span id="ts-sys" class="mod-label"></span>
                     </div>
                     <div id="system-wrapper" class="collapsible-content">
@@ -527,9 +894,11 @@
                         </div>
                     </div>
 
+                    <hr class="section-divider">
+
                     <div style="display:flex; justify-content: space-between; align-items: center;">
                         <button class="section-toggle-btn" onclick="toggleSection('template-wrapper')"
-                            id="lang-toggle-tpl">Instruction Template ▾</button>
+                            id="lang-toggle-tpl" aria-expanded="true" aria-controls="template-wrapper">Instruction Template &#9662;</button>
                         <span id="ts-tpl" class="mod-label"></span>
                     </div>
                     <div id="template-wrapper" class="collapsible-content">
@@ -540,6 +909,10 @@
                         </div>
                     </div>
 
+                    <div id="tag-chips" class="tag-chips-container"></div>
+
+                    <hr class="section-divider">
+
                     <div id="dynamic-inputs-container"></div>
 
                     <div class="info-summary-bar">
@@ -548,12 +921,14 @@
                     </div>
 
                     <div class="button-group">
+                        <button class="primary-btn" onclick="showPreview()" id="lang-preview">Preview</button>
                         <button class="primary-btn" onclick="generate()" id="lang-generate">Generate & Copy
                             Prompt</button>
                         <div class="menu-container">
-                            <button class="hamburger-btn" id="cog-action">⚙</button>
+                            <button class="hamburger-btn" id="cog-action" aria-label="More options" aria-expanded="false" aria-controls="cog-dropdown">&#9881;</button>
                             <div id="cog-dropdown" class="menu-dropdown">
                                 <button class="btn-util" onclick="downloadMarkdown()" id="lang-md">Download .md</button>
+                                <button class="btn-util" onclick="downloadOutput()" id="lang-dl-output">Download Output (.txt)</button>
                                 <button class="btn-util" onclick="copySystemOnly()" id="lang-copy-sys">Copy Sys
                                     Only</button>
                                 <button class="btn-util" style="color: #f87171;" onclick="showModal('clear')"
@@ -562,9 +937,6 @@
                         </div>
                     </div>
 
-                    <div id="status"
-                        style="margin-top: 15px; text-align: center; color: var(--accent-blue); font-weight: bold; visibility: hidden;">
-                        READY</div>
                 </div>
             </div>
 
@@ -572,11 +944,13 @@
 
     </div><!-- end content-area -->
 
-    <div id="modal-overlay">
+    <div id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-text">
         <div class="modal">
             <p id="modal-text" style="margin-bottom: 25px; line-height: 1.5; font-weight: 500;"></p>
             <div id="tutorial-content" class="tutorial-text hidden"></div>
-            <div style="display:flex; gap:10px; justify-content: center;">
+            <div id="preview-panel" class="hidden"></div>
+            <div id="import-summary" class="hidden" style="text-align:left; margin-bottom:15px; font-size:0.85rem; line-height:1.6;"></div>
+            <div style="display:flex; gap:10px; justify-content: center; flex-wrap: wrap;">
                 <button id="modal-confirm-btn" class="primary-btn" onclick="confirmAction()"
                     style="padding: 10px 20px; font-size: 0.8rem;"></button>
                 <button id="modal-cancel-btn" class="btn-util" onclick="closeModal()"
@@ -585,24 +959,43 @@
         </div>
     </div>
 
+    <div class="toast-container" id="toast-container"></div>
+
     <script>
+        const APP_KEYS = ['modular_flows_v12', 'active_tab_id_v12', 'theme_mode_v12', 'app_lang_v12', 'modular_shared_v12', 'sidebar_width_v12'];
+
         const i18n = {
             en: {
                 theme_dark: "Theme: Dark", theme_light: "Theme: Light", lang: "Language: EN", tutorial: "Tutorial / Help",
                 export: "Export Config", import: "Import Config", download_md: "Download .md",
-                copy_sys: "Copy Sys Only", toggle_sys: "System Block ▾", toggle_tpl: "Instruction Template ▾",
+                dl_output: "Download Output (.txt)",
+                copy_sys: "Copy Sys Only", toggle_sys: "System Block &#9662;", toggle_tpl: "Instruction Template &#9662;",
                 enable_sys: "Enable System Prompt Block", total: "Total Pipeline",
+                preview: "Preview",
                 generate: "Generate & Copy Prompt", clear: "Clear Inputs", mod: "Modified",
                 clear_storage: "Clear Studio Data", confirm: "Confirm", ok: "OK",
                 flows: "Flows", new_flow: "+ New Flow", cancel: "Cancel",
                 sys_placeholder: "System Persona/Rules...",
+                tpl_placeholder: "Write your prompt here. Use {{VARIABLE}} for dynamic inputs, {{SHARED:name}} for cross-flow variables, or {{TAB:FlowName}} to chain flows...",
                 char_sys: "Sys", char_tpl: "Tpl", char_dyn: "Dynamic Vars",
                 shared: "SHARED",
+                search_placeholder: "Search flows...",
                 status_ready: "READY", status_copied: "PROMPT COPIED", status_sys_copied: "SYSTEM COPIED",
+                status_saved: "SAVED",
                 msg_clear: "Clear all input fields for this tab?",
                 msg_delete: "Permanently delete this tab?",
                 msg_clear_storage: "Permanently delete ALL tabs and local settings? This cannot be undone.",
                 msg_last_tab: "Cannot delete the last remaining tab.",
+                preview_title: "Prompt Preview",
+                preview_copy: "Copy to Clipboard",
+                preview_warning: "Unresolved variables found:",
+                preview_error: "Errors found:",
+                import_summary_title: "Import Summary",
+                import_summary: "Found {flows} flow(s) and {shared} shared variable(s). This will replace your current data.",
+                import_invalid_schema: "Invalid file: missing required flow data.",
+                undo: "Undo",
+                cleared: "Inputs cleared.",
+                duplicate: "Duplicate",
                 tut_title: "Tutorial: AI Flow Studio",
                 tut_body: `
 <div style="text-align:left; line-height:1.7; font-size:0.85rem;">
@@ -617,7 +1010,8 @@
   <li><strong>Switch flows:</strong> Click on any flow name in the sidebar.</li>
   <li><strong>Rename a flow:</strong> Double-click the flow name to edit it.</li>
   <li><strong>Reorder flows:</strong> Drag and drop flows in the sidebar to rearrange them.</li>
-  <li><strong>Delete a flow:</strong> Click the <strong>✕</strong> button on a flow tab. You cannot delete the last remaining flow.</li>
+  <li><strong>Duplicate a flow:</strong> Click the <strong>&#9783;</strong> button to create a copy.</li>
+  <li><strong>Delete a flow:</strong> Click the <strong>&#10005;</strong> button on a flow tab. You cannot delete the last remaining flow.</li>
 </ul>
 
 <h3 style="color:var(--accent-blue);">2. System Block</h3>
@@ -648,17 +1042,19 @@
 <p><strong>Example:</strong> If you have a flow named "Outline", you can reference it with <code>{{TAB:Outline}}</code> in another flow.</p>
 <p><em>Note:</em> Circular dependencies (Flow A referencing Flow B, which references Flow A) are detected and will show an error.</p>
 
-<h3 style="color:var(--accent-blue);">7. Generate & Copy</h3>
-<p>Click <strong>"Generate & Copy Prompt"</strong> to assemble your final prompt with all variables resolved and copy it to the clipboard, ready to paste into any AI chat.</p>
+<h3 style="color:var(--accent-blue);">7. Preview & Generate</h3>
+<p>Click <strong>"Preview"</strong> to inspect the fully assembled prompt before copying. Unresolved variables and errors are highlighted.</p>
+<p>Click <strong>"Generate & Copy Prompt"</strong> to assemble and copy to clipboard.</p>
 
-<h3 style="color:var(--accent-blue);">8. Extra Tools (⚙ Menu)</h3>
+<h3 style="color:var(--accent-blue);">8. Extra Tools (&#9881; Menu)</h3>
 <ul>
   <li><strong>Download .md:</strong> Save the current template as a Markdown file.</li>
+  <li><strong>Download Output (.txt):</strong> Save the fully resolved prompt as a text file.</li>
   <li><strong>Copy Sys Only:</strong> Copy just the system prompt to the clipboard.</li>
-  <li><strong>Clear Inputs:</strong> Reset all input fields in the current flow (template and variables stay, values are cleared).</li>
+  <li><strong>Clear Inputs:</strong> Reset all input fields in the current flow. You can undo within 5 seconds.</li>
 </ul>
 
-<h3 style="color:var(--accent-blue);">9. Settings (☰ Sidebar Menu)</h3>
+<h3 style="color:var(--accent-blue);">9. Settings (&#9776; Sidebar Menu)</h3>
 <ul>
   <li><strong>Theme:</strong> Switch between Dark and Light mode.</li>
   <li><strong>Language:</strong> Switch between English and Spanish.</li>
@@ -667,66 +1063,92 @@
   <li><strong>Clear Studio Data:</strong> Delete all flows, variables, and settings. <em>This cannot be undone.</em></li>
 </ul>
 
-<h3 style="color:var(--accent-blue);">10. Tips</h3>
+<h3 style="color:var(--accent-blue);">10. Keyboard Shortcuts</h3>
+<ul>
+  <li><strong>Ctrl+Enter:</strong> Generate & Copy prompt.</li>
+  <li><strong>Ctrl+Shift+N:</strong> Create a new flow.</li>
+  <li><strong>Escape:</strong> Close modals and menus.</li>
+  <li><strong>Tab</strong> (in editor): Insert a tab character.</li>
+  <li><strong>Enter</strong> (in editor): Auto-indent.</li>
+</ul>
+
+<h3 style="color:var(--accent-blue);">11. Tips</h3>
 <ul>
   <li>All data is saved automatically in your browser (localStorage).</li>
   <li>Each field shows a <em>"Modified"</em> timestamp so you know when it was last edited.</li>
-  <li>The info bar at the bottom shows character counts for System, Template, and Dynamic Variables.</li>
-  <li>Press <strong>Tab</strong> inside any editor to insert a tab character instead of moving focus.</li>
-  <li>Press <strong>Enter</strong> to auto-indent based on the current line's indentation.</li>
+  <li>The info bar at the bottom shows character and token counts.</li>
+  <li>Color-coded chips below the template show detected variables at a glance.</li>
+  <li>Use the search bar in the sidebar to quickly find flows.</li>
+  <li>Drag the sidebar edge to resize it.</li>
 </ul>
 </div>`
             },
             es: {
                 theme_dark: "Tema: Oscuro", theme_light: "Tema: Claro", lang: "Idioma: ES", tutorial: "Tutorial / Ayuda",
                 export: "Exportar Config", import: "Importar Config", download_md: "Descargar .md",
-                copy_sys: "Copiar Sys", toggle_sys: "Bloque Sistema ▾", toggle_tpl: "Plantilla Instrucción ▾",
+                dl_output: "Descargar Salida (.txt)",
+                copy_sys: "Copiar Sys", toggle_sys: "Bloque Sistema &#9662;", toggle_tpl: "Plantilla Instrucci\u00f3n &#9662;",
                 enable_sys: "Habilitar Bloque de Sistema", total: "Pipeline Total",
+                preview: "Vista Previa",
                 generate: "Generar y Copiar Prompt", clear: "Limpiar Campos", mod: "Modificado",
                 clear_storage: "Borrar Datos del Studio", confirm: "Confirmar", ok: "Aceptar",
                 flows: "Flujos", new_flow: "+ Nuevo Flujo", cancel: "Cancelar",
                 sys_placeholder: "Persona/Reglas del Sistema...",
-                char_sys: "Sis", char_tpl: "Plt", char_dyn: "Vars Dinámicas",
+                tpl_placeholder: "Escribe tu prompt aqu\u00ed. Usa {{VARIABLE}} para campos din\u00e1micos, {{SHARED:nombre}} para variables compartidas, o {{TAB:NombreFlujo}} para encadenar flujos...",
+                char_sys: "Sis", char_tpl: "Plt", char_dyn: "Vars Din\u00e1micas",
                 shared: "GLOBAL",
+                search_placeholder: "Buscar flujos...",
                 status_ready: "LISTO", status_copied: "PROMPT COPIADO", status_sys_copied: "SISTEMA COPIADO",
-                msg_clear: "¿Limpiar todos los campos de esta pestaña?",
-                msg_delete: "¿Eliminar esta pestaña permanentemente?",
-                msg_clear_storage: "¿Eliminar TODAS las pestañas y configuraciones locales? Esto no se puede deshacer.",
-                msg_last_tab: "No se puede eliminar la única pestaña restante.",
+                status_saved: "GUARDADO",
+                msg_clear: "\u00bfLimpiar todos los campos de esta pesta\u00f1a?",
+                msg_delete: "\u00bfEliminar esta pesta\u00f1a permanentemente?",
+                msg_clear_storage: "\u00bfEliminar TODAS las pesta\u00f1as y configuraciones locales? Esto no se puede deshacer.",
+                msg_last_tab: "No se puede eliminar la \u00fanica pesta\u00f1a restante.",
+                preview_title: "Vista Previa del Prompt",
+                preview_copy: "Copiar al Portapapeles",
+                preview_warning: "Variables sin resolver encontradas:",
+                preview_error: "Errores encontrados:",
+                import_summary_title: "Resumen de Importaci\u00f3n",
+                import_summary: "Se encontraron {flows} flujo(s) y {shared} variable(s) compartida(s). Esto reemplazar\u00e1 tus datos actuales.",
+                import_invalid_schema: "Archivo inv\u00e1lido: faltan datos de flujo requeridos.",
+                undo: "Deshacer",
+                cleared: "Campos limpiados.",
+                duplicate: "Duplicar",
                 tut_title: "Tutorial: AI Flow Studio",
                 tut_body: `
 <div style="text-align:left; line-height:1.7; font-size:0.85rem;">
 
 <h3 style="color:var(--accent-blue); margin-top:0;">Primeros Pasos</h3>
-<p>AI Flow Studio te ayuda a construir prompts reutilizables y modulares para asistentes de IA. En lugar de reescribir prompts desde cero cada vez, creas <strong>plantillas</strong> con marcadores que se completan automáticamente.</p>
+<p>AI Flow Studio te ayuda a construir prompts reutilizables y modulares para asistentes de IA. En lugar de reescribir prompts desde cero cada vez, creas <strong>plantillas</strong> con marcadores que se completan autom\u00e1ticamente.</p>
 
-<h3 style="color:var(--accent-blue);">1. Flujos (Pestañas)</h3>
+<h3 style="color:var(--accent-blue);">1. Flujos (Pesta\u00f1as)</h3>
 <p>Cada <strong>flujo</strong> es un espacio de trabajo independiente que aparece en la barra lateral izquierda.</p>
 <ul>
   <li><strong>Crear un flujo:</strong> Haz clic en <em>"+ Nuevo Flujo"</em> en la parte superior de la barra lateral.</li>
   <li><strong>Cambiar de flujo:</strong> Haz clic en el nombre de cualquier flujo en la barra lateral.</li>
   <li><strong>Renombrar un flujo:</strong> Haz doble clic en el nombre del flujo para editarlo.</li>
   <li><strong>Reordenar flujos:</strong> Arrastra y suelta los flujos en la barra lateral para reorganizarlos.</li>
-  <li><strong>Eliminar un flujo:</strong> Haz clic en el botón <strong>✕</strong> de la pestaña. No se puede eliminar el último flujo restante.</li>
+  <li><strong>Duplicar un flujo:</strong> Haz clic en el bot\u00f3n <strong>&#9783;</strong> para crear una copia.</li>
+  <li><strong>Eliminar un flujo:</strong> Haz clic en el bot\u00f3n <strong>&#10005;</strong> de la pesta\u00f1a. No se puede eliminar el \u00faltimo flujo restante.</li>
 </ul>
 
 <h3 style="color:var(--accent-blue);">2. Bloque de Sistema</h3>
-<p>El <strong>Bloque de Sistema</strong> te permite definir una persona o reglas a nivel de sistema (ej: "Eres un asistente de programación útil").</p>
+<p>El <strong>Bloque de Sistema</strong> te permite definir una persona o reglas a nivel de sistema (ej: "Eres un asistente de programaci\u00f3n \u00fatil").</p>
 <ul>
   <li>Marca la casilla <em>"Habilitar Bloque de Sistema"</em> para mostrar el editor.</li>
-  <li>Cuando está habilitado, la salida generada incluirá secciones <code>SYSTEM:</code> y <code>USER:</code>.</li>
-  <li>Puedes colapsar esta sección haciendo clic en su encabezado.</li>
+  <li>Cuando est\u00e1 habilitado, la salida generada incluir\u00e1 secciones <code>SYSTEM:</code> y <code>USER:</code>.</li>
+  <li>Puedes colapsar esta secci\u00f3n haciendo clic en su encabezado.</li>
 </ul>
 
-<h3 style="color:var(--accent-blue);">3. Plantilla de Instrucción</h3>
-<p>Este es el cuerpo principal de tu prompt. Escribe tus instrucciones aquí y usa <strong>marcadores</strong> para hacerlas reutilizables.</p>
+<h3 style="color:var(--accent-blue);">3. Plantilla de Instrucci\u00f3n</h3>
+<p>Este es el cuerpo principal de tu prompt. Escribe tus instrucciones aqu\u00ed y usa <strong>marcadores</strong> para hacerlas reutilizables.</p>
 <ul>
-  <li>Escribe cualquier <code>{{NOMBRE_TAG}}</code> y un campo de entrada para esa variable aparecerá automáticamente debajo.</li>
-  <li>Puedes colapsar esta sección haciendo clic en su encabezado.</li>
+  <li>Escribe cualquier <code>{{NOMBRE_TAG}}</code> y un campo de entrada para esa variable aparecer\u00e1 autom\u00e1ticamente debajo.</li>
+  <li>Puedes colapsar esta secci\u00f3n haciendo clic en su encabezado.</li>
 </ul>
 
-<h3 style="color:var(--accent-blue);">4. Variables Dinámicas</h3>
-<p>Cualquier <code>{{TAG}}</code> en tu plantilla crea un campo de entrada automáticamente. Completa el valor y se inyectará cuando generes el prompt.</p>
+<h3 style="color:var(--accent-blue);">4. Variables Din\u00e1micas</h3>
+<p>Cualquier <code>{{TAG}}</code> en tu plantilla crea un campo de entrada autom\u00e1ticamente. Completa el valor y se inyectar\u00e1 cuando generes el prompt.</p>
 <p><strong>Ejemplo:</strong> Una plantilla como <code>Traduce {{TEXTO}} al {{IDIOMA}}</code> crea dos campos: uno para TEXTO y otro para IDIOMA.</p>
 
 <h3 style="color:var(--accent-blue);">5. Variables Compartidas</h3>
@@ -736,41 +1158,53 @@
 <h3 style="color:var(--accent-blue);">6. Enlace de Flujos</h3>
 <p>Usa <code>{{TAB:NombreFlujo}}</code> para incluir la <strong>salida generada</strong> de otro flujo dentro de tu plantilla actual. Esto te permite encadenar prompts en un pipeline.</p>
 <p><strong>Ejemplo:</strong> Si tienes un flujo llamado "Esquema", puedes referenciarlo con <code>{{TAB:Esquema}}</code> en otro flujo.</p>
-<p><em>Nota:</em> Las dependencias circulares (Flujo A referencia a Flujo B, que referencia a Flujo A) se detectan y mostrarán un error.</p>
+<p><em>Nota:</em> Las dependencias circulares (Flujo A referencia a Flujo B, que referencia a Flujo A) se detectan y mostrar\u00e1n un error.</p>
 
-<h3 style="color:var(--accent-blue);">7. Generar y Copiar</h3>
-<p>Haz clic en <strong>"Generar y Copiar Prompt"</strong> para ensamblar tu prompt final con todas las variables resueltas y copiarlo al portapapeles, listo para pegar en cualquier chat de IA.</p>
+<h3 style="color:var(--accent-blue);">7. Vista Previa y Generar</h3>
+<p>Haz clic en <strong>"Vista Previa"</strong> para inspeccionar el prompt completamente ensamblado antes de copiar. Las variables sin resolver y los errores se resaltan.</p>
+<p>Haz clic en <strong>"Generar y Copiar Prompt"</strong> para ensamblar y copiar al portapapeles.</p>
 
-<h3 style="color:var(--accent-blue);">8. Herramientas Extra (Menú ⚙)</h3>
+<h3 style="color:var(--accent-blue);">8. Herramientas Extra (Men\u00fa &#9881;)</h3>
 <ul>
   <li><strong>Descargar .md:</strong> Guarda la plantilla actual como archivo Markdown.</li>
+  <li><strong>Descargar Salida (.txt):</strong> Guarda el prompt completamente resuelto como archivo de texto.</li>
   <li><strong>Copiar Sys:</strong> Copia solo el prompt de sistema al portapapeles.</li>
-  <li><strong>Limpiar Campos:</strong> Reinicia todos los campos del flujo actual (la plantilla permanece, los valores se borran).</li>
+  <li><strong>Limpiar Campos:</strong> Reinicia todos los campos del flujo actual. Puedes deshacer en 5 segundos.</li>
 </ul>
 
-<h3 style="color:var(--accent-blue);">9. Configuración (Menú ☰ de la Barra Lateral)</h3>
+<h3 style="color:var(--accent-blue);">9. Configuraci\u00f3n (Men\u00fa &#9776; de la Barra Lateral)</h3>
 <ul>
   <li><strong>Tema:</strong> Cambia entre modo Oscuro y Claro.</li>
-  <li><strong>Idioma:</strong> Cambia entre Inglés y Español.</li>
+  <li><strong>Idioma:</strong> Cambia entre Ingl\u00e9s y Espa\u00f1ol.</li>
   <li><strong>Exportar Config:</strong> Descarga todos tus flujos y variables compartidas como archivo JSON para respaldo o compartir.</li>
   <li><strong>Importar Config:</strong> Carga un archivo JSON previamente exportado para restaurar tus flujos.</li>
   <li><strong>Borrar Datos del Studio:</strong> Elimina todos los flujos, variables y configuraciones. <em>Esto no se puede deshacer.</em></li>
 </ul>
 
-<h3 style="color:var(--accent-blue);">10. Consejos</h3>
+<h3 style="color:var(--accent-blue);">10. Atajos de Teclado</h3>
 <ul>
-  <li>Todos los datos se guardan automáticamente en tu navegador (localStorage).</li>
-  <li>Cada campo muestra una marca de tiempo <em>"Modificado"</em> para saber cuándo se editó por última vez.</li>
-  <li>La barra de información inferior muestra el conteo de caracteres para Sistema, Plantilla y Variables Dinámicas.</li>
-  <li>Presiona <strong>Tab</strong> dentro de cualquier editor para insertar un carácter de tabulación en lugar de mover el foco.</li>
-  <li>Presiona <strong>Enter</strong> para auto-indentar basándose en la indentación de la línea actual.</li>
+  <li><strong>Ctrl+Enter:</strong> Generar y Copiar prompt.</li>
+  <li><strong>Ctrl+Shift+N:</strong> Crear un nuevo flujo.</li>
+  <li><strong>Escape:</strong> Cerrar modales y men\u00fas.</li>
+  <li><strong>Tab</strong> (en editor): Insertar un car\u00e1cter de tabulaci\u00f3n.</li>
+  <li><strong>Enter</strong> (en editor): Auto-indentar.</li>
+</ul>
+
+<h3 style="color:var(--accent-blue);">11. Consejos</h3>
+<ul>
+  <li>Todos los datos se guardan autom\u00e1ticamente en tu navegador (localStorage).</li>
+  <li>Cada campo muestra una marca de tiempo <em>"Modificado"</em> para saber cu\u00e1ndo se edit\u00f3 por \u00faltima vez.</li>
+  <li>La barra de informaci\u00f3n inferior muestra el conteo de caracteres y tokens.</li>
+  <li>Los chips de colores debajo de la plantilla muestran las variables detectadas de un vistazo.</li>
+  <li>Usa la barra de b\u00fasqueda en la barra lateral para encontrar flujos r\u00e1pidamente.</li>
+  <li>Arrastra el borde de la barra lateral para redimensionarla.</li>
 </ul>
 </div>`
             }
         };
 
         let tabs = JSON.parse(localStorage.getItem('modular_flows_v12')) || [
-            { id: 't1', name: 'Claude Flow', system: '', template: '{{VP_SPEC}}\n{{LAST_RES}}', vars: {}, useSystem: false, collapsedStates: {}, ts: {} }
+            { id: 't1', name: 'New Prompt Template', system: '', template: '{{VP_SPEC}}\n{{LAST_RES}}', vars: {}, useSystem: false, collapsedStates: {}, ts: {} }
         ];
         let activeTabId = localStorage.getItem('active_tab_id_v12') || tabs[0].id;
         let isDarkMode = localStorage.getItem('theme_mode_v12') !== 'light';
@@ -781,11 +1215,16 @@
         let _editorListenersAttached = new WeakSet();
         let _saveTimer = null;
         let _extractTimer = null;
+        let _undoSnapshot = null;
+        let _undoTimer = null;
+        let _pendingImport = null;
+        let _modalTriggerEl = null;
+        let _searchFilter = '';
 
         // Shared Variables (global namespace, persisted separately)
         let sharedStore = JSON.parse(localStorage.getItem('modular_shared_v12')) || { vars: {}, ts: {} };
         function saveSharedStore() {
-            try { localStorage.setItem('modular_shared_v12', JSON.stringify(sharedStore)); } catch (e) { showModal('alert', "Quota Exceeded."); }
+            try { localStorage.setItem('modular_shared_v12', JSON.stringify(sharedStore)); } catch (e) { showToast("Quota Exceeded.", 5000); }
         }
 
         function getGMT5Time() {
@@ -795,22 +1234,167 @@
             }).format(new Date()).replace(',', '') + ' (GMT-5)';
         }
 
+        /* --- Toast System --- */
+        function showToast(msg, duration = 3000, opts = {}) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            let html = `<span>${msg}</span>`;
+            if (opts.undoFn) {
+                html += `<button class="toast-undo" data-action="undo">${i18n[currentLang].undo}</button>`;
+            }
+            html += `<button class="toast-close" data-action="close">&times;</button>`;
+            toast.innerHTML = html;
+            container.appendChild(toast);
+
+            toast.addEventListener('click', (e) => {
+                const action = e.target.getAttribute('data-action');
+                if (action === 'close') dismissToast(toast);
+                if (action === 'undo' && opts.undoFn) { opts.undoFn(); dismissToast(toast); }
+            });
+
+            if (duration > 0) {
+                setTimeout(() => dismissToast(toast), duration);
+            }
+            return toast;
+        }
+
+        function dismissToast(toast) {
+            if (!toast.parentNode) return;
+            toast.classList.add('toast-exit');
+            setTimeout(() => { if (toast.parentNode) toast.parentNode.removeChild(toast); }, 300);
+        }
+
         function init() {
             if (!isDarkMode) document.body.classList.add('light-theme');
             if (!tabs.find(x => x.id === activeTabId)) activeTabId = tabs[0] ? tabs[0].id : null;
 
+            // Restore sidebar width
+            const savedWidth = localStorage.getItem('sidebar_width_v12');
+            if (savedWidth) {
+                const sidebar = document.getElementById('nav-sidebar');
+                sidebar.style.width = savedWidth + 'px';
+                sidebar.style.minWidth = savedWidth + 'px';
+            }
+
             document.getElementById('nav-header-action').addEventListener('click', (e) => { e.stopPropagation(); document.getElementById("menu-dropdown").classList.toggle("show"); });
-            document.getElementById('cog-action').addEventListener('click', (e) => { e.stopPropagation(); document.getElementById("cog-dropdown").classList.toggle("show"); });
+            document.getElementById('cog-action').addEventListener('click', (e) => {
+                e.stopPropagation();
+                const dd = document.getElementById("cog-dropdown");
+                dd.classList.toggle("show");
+                document.getElementById('cog-action').setAttribute('aria-expanded', dd.classList.contains('show'));
+            });
             document.getElementById('add-tab-action').addEventListener('click', addNewTab);
             document.getElementById('btn-theme-toggle').addEventListener('click', toggleTheme);
             document.getElementById('btn-lang-toggle').addEventListener('click', toggleLang);
             document.getElementById('btn-tutorial-trigger').addEventListener('click', showTutorial);
 
-            window.addEventListener('click', (e) => {
-                if (!e.target.closest('#nav-header-action') && !e.target.matches('.hamburger-btn')) document.querySelectorAll('.menu-dropdown').forEach(m => m.classList.remove('show'));
+            // Search
+            const searchInput = document.getElementById('flow-search');
+            const searchClear = document.getElementById('flow-search-clear');
+            searchInput.addEventListener('input', () => {
+                _searchFilter = searchInput.value.toLowerCase();
+                searchClear.classList.toggle('visible', _searchFilter.length > 0);
+                renderTabs();
+            });
+            searchClear.addEventListener('click', () => {
+                searchInput.value = '';
+                _searchFilter = '';
+                searchClear.classList.remove('visible');
+                renderTabs();
             });
 
+            // Mobile hamburger
+            document.getElementById('mobile-hamburger-btn').addEventListener('click', toggleMobileSidebar);
+            document.getElementById('sidebar-overlay').addEventListener('click', closeMobileSidebar);
+
+            // Sidebar resize
+            initSidebarResize();
+
+            window.addEventListener('click', (e) => {
+                if (!e.target.closest('#nav-header-action') && !e.target.matches('.hamburger-btn')) {
+                    document.querySelectorAll('.menu-dropdown').forEach(m => m.classList.remove('show'));
+                    document.getElementById('cog-action').setAttribute('aria-expanded', 'false');
+                }
+            });
+
+            // Keyboard shortcuts
+            window.addEventListener('keydown', handleGlobalKeydown);
+
             updateUIStrings(); renderTabs(); loadActiveTabData(); setupEditorListeners();
+            updateMobileFlowName();
+        }
+
+        /* --- Global Keyboard Shortcuts --- */
+        function handleGlobalKeydown(e) {
+            // Escape: close modals and menus
+            if (e.key === 'Escape') {
+                const overlay = document.getElementById('modal-overlay');
+                if (overlay.style.display === 'flex') {
+                    closeModal();
+                    e.preventDefault();
+                    return;
+                }
+                document.querySelectorAll('.menu-dropdown.show').forEach(m => m.classList.remove('show'));
+                document.getElementById('cog-action').setAttribute('aria-expanded', 'false');
+                closeMobileSidebar();
+                return;
+            }
+            // Ctrl+Enter: Generate
+            if (e.ctrlKey && e.key === 'Enter') {
+                e.preventDefault();
+                generate();
+                return;
+            }
+            // Ctrl+Shift+N: New flow
+            if (e.ctrlKey && e.shiftKey && (e.key === 'N' || e.key === 'n')) {
+                e.preventDefault();
+                addNewTab();
+                return;
+            }
+        }
+
+        /* --- Mobile Sidebar --- */
+        function toggleMobileSidebar() {
+            document.getElementById('nav-sidebar').classList.toggle('mobile-open');
+            document.getElementById('sidebar-overlay').classList.toggle('visible');
+        }
+        function closeMobileSidebar() {
+            document.getElementById('nav-sidebar').classList.remove('mobile-open');
+            document.getElementById('sidebar-overlay').classList.remove('visible');
+        }
+        function updateMobileFlowName() {
+            const tab = tabs.find(t => t.id === activeTabId);
+            document.getElementById('mobile-flow-name').textContent = tab ? tab.name : '';
+        }
+
+        /* --- Sidebar Resize --- */
+        function initSidebarResize() {
+            const handle = document.getElementById('sidebar-resize-handle');
+            const sidebar = document.getElementById('nav-sidebar');
+            let startX, startWidth;
+
+            handle.addEventListener('mousedown', (e) => {
+                e.preventDefault();
+                startX = e.clientX;
+                startWidth = sidebar.offsetWidth;
+                handle.classList.add('active');
+                document.addEventListener('mousemove', onMouseMove);
+                document.addEventListener('mouseup', onMouseUp);
+            });
+
+            function onMouseMove(e) {
+                const newWidth = Math.min(400, Math.max(150, startWidth + (e.clientX - startX)));
+                sidebar.style.width = newWidth + 'px';
+                sidebar.style.minWidth = newWidth + 'px';
+            }
+
+            function onMouseUp() {
+                handle.classList.remove('active');
+                document.removeEventListener('mousemove', onMouseMove);
+                document.removeEventListener('mouseup', onMouseUp);
+                localStorage.setItem('sidebar_width_v12', sidebar.offsetWidth);
+            }
         }
 
         /* --- Drag and Drop --- */
@@ -828,9 +1412,10 @@
         /* --- Dynamic Variable Logic --- */
         function extractVariables() {
             const templateText = document.getElementById('template').value;
-            const matches = [...new Set([...templateText.matchAll(/{{([^{}]+)}}/g)].map(m => m[1]))];
+            const matches = [...new Set([...templateText.matchAll(/\{\{([^{}]+)\}\}/g)].map(m => m[1]))];
             const localTags = matches.filter(v => !v.startsWith('TAB:') && !v.startsWith('SHARED:'));
             const sharedTags = matches.filter(v => v.startsWith('SHARED:')).map(v => v.substring(7));
+            const linkedTags = matches.filter(v => v.startsWith('TAB:')).map(v => v.substring(4));
 
             const container = document.getElementById('dynamic-inputs-container');
             const tab = tabs.find(t => t.id === activeTabId);
@@ -844,7 +1429,7 @@
                 const timestamp = sharedStore.ts[v] ? `${t_lang.mod}: ${sharedStore.ts[v]}` : "";
                 const uniqueId = `shared-${v.replace(/[^a-zA-Z0-9]/g, '_')}`;
                 return `
-                <div class="shared-var-block">
+                <div class="shared-var-block" id="var-block-SHARED:${v}">
                     <label style="display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 0.7rem; font-weight: bold;">
                         <span>${v}<span class="shared-var-badge">${t_lang.shared}</span></span>
                         <span id="ts-SHARED:${v}" class="mod-label">${timestamp}</span>
@@ -863,7 +1448,7 @@
                 const timestamp = tab.ts[v] ? `${t_lang.mod}: ${tab.ts[v]}` : "";
                 const uniqueId = `local-${v.replace(/[^a-zA-Z0-9]/g, '_')}`;
                 return `
-                <div class="dynamic-var-block">
+                <div class="dynamic-var-block" id="var-block-${v}">
                     <label style="display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 0.7rem; font-weight: bold;">
                         <span>${v}</span>
                         <span id="ts-${v}" class="mod-label">${timestamp}</span>
@@ -877,8 +1462,32 @@
             }).join('');
 
             container.innerHTML = html;
+
+            // Tag chips
+            renderTagChips(localTags, sharedTags, linkedTags);
+
             setupEditorListeners();
             updateCounts();
+        }
+
+        function renderTagChips(localTags, sharedTags, linkedTags) {
+            const chipsEl = document.getElementById('tag-chips');
+            let html = '';
+            localTags.forEach(v => {
+                html += `<span class="tag-chip local" onclick="scrollToVar('${v}')" title="Local variable">{{${v}}}</span>`;
+            });
+            sharedTags.forEach(v => {
+                html += `<span class="tag-chip shared" onclick="scrollToVar('SHARED:${v}')" title="Shared variable">{{SHARED:${v}}}</span>`;
+            });
+            linkedTags.forEach(v => {
+                html += `<span class="tag-chip linked" title="Linked flow">{{TAB:${v}}}</span>`;
+            });
+            chipsEl.innerHTML = html;
+        }
+
+        function scrollToVar(varName) {
+            const el = document.getElementById('var-block-' + varName);
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
 
         function handleDynamicInput(el) {
@@ -920,9 +1529,10 @@
             document.querySelectorAll('.dynamic-input').forEach(el => dynamicLen += el.value.length);
 
             const total = sys + tpl + dynamicLen;
+            const tokens = Math.ceil(total / 4);
             const t = i18n[currentLang];
             document.getElementById('char-breakdown').innerText = `${t.char_sys}: ${sys} | ${t.char_tpl}: ${tpl} | ${t.char_dyn}: ${dynamicLen}`;
-            document.getElementById('total-pipeline-info').innerHTML = `${t.total}: ${total} chars`;
+            document.getElementById('total-pipeline-info').innerHTML = `${t.total}: ${total} chars | ~${tokens} tokens`;
             document.getElementById('ts-sys').innerText = tab.ts.sys ? `${t.mod}: ${tab.ts.sys}` : "";
             document.getElementById('ts-tpl').innerText = tab.ts.tpl ? `${t.mod}: ${tab.ts.tpl}` : "";
         }
@@ -946,7 +1556,7 @@
                 try {
                     localStorage.setItem('modular_flows_v12', JSON.stringify(tabs));
                     localStorage.setItem('active_tab_id_v12', activeTabId);
-                } catch (e) { showModal('alert', "Quota Exceeded."); }
+                } catch (e) { showToast("Quota Exceeded.", 5000); }
             }
         }
 
@@ -959,14 +1569,15 @@
             ['system-wrapper', 'template-wrapper'].forEach(id => {
                 const el = document.getElementById(id);
                 if (t.collapsedStates[id]) el.classList.add('collapsed'); else el.classList.remove('collapsed');
+                // Update aria-expanded
+                const btn = document.querySelector(`[aria-controls="${id}"]`);
+                if (btn) btn.setAttribute('aria-expanded', !t.collapsedStates[id]);
             });
             toggleSystem(t.useSystem); extractVariables(); updateCounts();
+            updateMobileFlowName();
         }
 
-        /* --- Actions --- */
         /* --- Resolution Logic --- */
-
-        // Sync all dynamic input values from DOM to tab.vars (for current tab)
         function syncAllDynamicInputs() {
             const tab = tabs.find(t => t.id === activeTabId);
             if (!tab) return;
@@ -991,18 +1602,21 @@
             let final = tab.template;
 
             // 1. Recursive TAB resolution
-            final = final.replace(/{{TAB:(.*?)}}/g, (match, targetName) => {
+            final = final.replace(/\{\{TAB:(.*?)\}\}/g, (match, targetName) => {
                 return resolveTabOutput(targetName.trim(), [...visitedIds, tab.id]);
             });
 
             // 2. Shared Vars
-            final = final.replace(/{{SHARED:(.*?)}}/g, (match, key) => {
-                return sharedStore.vars[key.trim()] !== undefined ? sharedStore.vars[key.trim()] : match;
+            final = final.replace(/\{\{SHARED:(.*?)\}\}/g, (match, key) => {
+                const sharedValue = sharedStore.vars[key.trim()];
+                return sharedValue !== undefined && sharedValue !== '' ? sharedValue : match;
             });
 
             // 3. Local Vars
             Object.keys(tab.vars).forEach(key => {
-                final = final.replace(new RegExp(`{{${key}}}`, 'g'), tab.vars[key]);
+                const value = tab.vars[key];
+                if (value === undefined || value === '') return;
+                final = final.replace(new RegExp(`\\{\\{${key}\\}\\}`, 'g'), value);
             });
 
             const sys = tab.system || '';
@@ -1011,16 +1625,90 @@
         }
 
         function generate() {
-            syncAllDynamicInputs(); // Sync all dynamic inputs to vars first
-            clearTimeout(_saveTimer); // Flush any pending debounced save
-            saveCurrentTabData(); // Then persist to localStorage
+            syncAllDynamicInputs();
+            clearTimeout(_saveTimer);
+            saveCurrentTabData();
             const tab = tabs.find(t => t.id === activeTabId);
             if (!tab) return;
 
             const output = resolveTabOutput(tab.name);
             navigator.clipboard.writeText(output).then(() => {
-                showStatus(i18n[currentLang].status_copied);
+                showToast(i18n[currentLang].status_copied);
             });
+        }
+
+        /* --- Preview --- */
+        function showPreview() {
+            syncAllDynamicInputs();
+            clearTimeout(_saveTimer);
+            saveCurrentTabData();
+            const tab = tabs.find(t => t.id === activeTabId);
+            if (!tab) return;
+
+            const output = resolveTabOutput(tab.name);
+            const t = i18n[currentLang];
+
+            // Find unresolved vars and errors
+            const unresolvedMatches = [...output.matchAll(/\{\{[^{}]+\}\}/g)].map(m => m[0]);
+            const errorMatches = [...output.matchAll(/\[\[Error:.*?\]\]/g)].map(m => m[0]);
+
+            // Build highlighted output
+            let highlighted = output
+                .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                .replace(/\{\{([^{}]+)\}\}/g, '<span class="unresolved">{{$1}}</span>')
+                .replace(/\[\[Error:(.*?)\]\]/g, '<span class="error-tag">[[Error:$1]]</span>');
+
+            let warningsHtml = '';
+            if (unresolvedMatches.length > 0) {
+                warningsHtml += `<div class="preview-warning">${t.preview_warning} ${unresolvedMatches.join(', ')}</div>`;
+            }
+            if (errorMatches.length > 0) {
+                warningsHtml += `<div class="preview-warning" style="color:#ef4444;">${t.preview_error} ${errorMatches.join(', ')}</div>`;
+            }
+
+            const panel = document.getElementById('preview-panel');
+            panel.innerHTML = `
+                <h3 style="margin-top:0; color:var(--accent-blue);">${t.preview_title}</h3>
+                ${warningsHtml}
+                <div class="preview-output">${highlighted}</div>
+                <button class="primary-btn" onclick="copyPreviewOutput()" style="padding: 10px 20px; font-size: 0.8rem; margin-bottom: 10px;">${t.preview_copy}</button>
+            `;
+            panel.classList.remove('hidden');
+            panel.setAttribute('data-raw-output', output);
+
+            document.getElementById('modal-text').classList.add('hidden');
+            document.getElementById('tutorial-content').classList.add('hidden');
+            document.getElementById('import-summary').classList.add('hidden');
+            document.getElementById('modal-confirm-btn').innerText = t.ok;
+            document.getElementById('modal-cancel-btn').style.display = 'none';
+            pendingAction = 'alert';
+
+            _modalTriggerEl = document.activeElement;
+            document.getElementById('modal-overlay').style.display = 'flex';
+            document.getElementById('modal-confirm-btn').focus();
+        }
+
+        function copyPreviewOutput() {
+            const panel = document.getElementById('preview-panel');
+            const raw = panel.getAttribute('data-raw-output');
+            navigator.clipboard.writeText(raw).then(() => {
+                showToast(i18n[currentLang].status_copied);
+            });
+        }
+
+        /* --- Download Output --- */
+        function downloadOutput() {
+            syncAllDynamicInputs();
+            clearTimeout(_saveTimer);
+            saveCurrentTabData();
+            const tab = tabs.find(t => t.id === activeTabId);
+            if (!tab) return;
+            const output = resolveTabOutput(tab.name);
+            const b = new Blob([output], { type: 'text/plain' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(b);
+            a.download = `${tab.name}_output.txt`;
+            a.click();
         }
 
         function exportData() {
@@ -1030,77 +1718,251 @@
             a.download = 'studio_config_compact.json'; a.click();
         }
 
+        /* --- Import with Validation --- */
+        function validateTab(tab) {
+            if (!tab || typeof tab !== 'object') return null;
+            return {
+                id: tab.id || 't' + Date.now() + Math.random().toString(36).slice(2, 6),
+                name: typeof tab.name === 'string' ? tab.name : 'Imported Flow',
+                system: typeof tab.system === 'string' ? tab.system : '',
+                template: typeof tab.template === 'string' ? tab.template : '',
+                vars: (tab.vars && typeof tab.vars === 'object') ? tab.vars : {},
+                useSystem: !!tab.useSystem,
+                collapsedStates: (tab.collapsedStates && typeof tab.collapsedStates === 'object') ? tab.collapsedStates : {},
+                ts: (tab.ts && typeof tab.ts === 'object') ? tab.ts : {}
+            };
+        }
+
+        function importData(e) {
+            const r = new FileReader();
+            r.onload = x => {
+                try {
+                    const parsed = JSON.parse(x.target.result);
+                    let importedTabs, importedShared;
+
+                    if (Array.isArray(parsed)) {
+                        importedTabs = parsed;
+                        importedShared = null;
+                    } else if (parsed && typeof parsed === 'object') {
+                        importedTabs = parsed.tabs;
+                        importedShared = parsed.sharedStore || null;
+                    } else {
+                        showToast(i18n[currentLang].import_invalid_schema, 5000);
+                        return;
+                    }
+
+                    if (!Array.isArray(importedTabs) || importedTabs.length === 0) {
+                        showToast(i18n[currentLang].import_invalid_schema, 5000);
+                        return;
+                    }
+
+                    // Validate each tab
+                    const validatedTabs = importedTabs.map(validateTab).filter(Boolean);
+                    if (validatedTabs.length === 0) {
+                        showToast(i18n[currentLang].import_invalid_schema, 5000);
+                        return;
+                    }
+
+                    // Validate shared store
+                    let validatedShared = { vars: {}, ts: {} };
+                    if (importedShared && typeof importedShared === 'object') {
+                        validatedShared.vars = (importedShared.vars && typeof importedShared.vars === 'object') ? importedShared.vars : {};
+                        validatedShared.ts = (importedShared.ts && typeof importedShared.ts === 'object') ? importedShared.ts : {};
+                    }
+
+                    const sharedCount = Object.keys(validatedShared.vars).length;
+
+                    // Show import summary
+                    _pendingImport = { tabs: validatedTabs, shared: validatedShared };
+                    const t = i18n[currentLang];
+                    const summaryText = t.import_summary
+                        .replace('{flows}', validatedTabs.length)
+                        .replace('{shared}', sharedCount);
+
+                    document.getElementById('modal-text').classList.add('hidden');
+                    document.getElementById('tutorial-content').classList.add('hidden');
+                    document.getElementById('preview-panel').classList.add('hidden');
+                    const summaryEl = document.getElementById('import-summary');
+                    summaryEl.innerHTML = `<h3 style="color:var(--accent-blue); margin-top:0;">${t.import_summary_title}</h3><p>${summaryText}</p>`;
+                    summaryEl.classList.remove('hidden');
+
+                    document.getElementById('modal-confirm-btn').innerText = t.confirm;
+                    document.getElementById('modal-cancel-btn').innerText = t.cancel;
+                    document.getElementById('modal-cancel-btn').style.display = 'block';
+                    pendingAction = 'import';
+
+                    _modalTriggerEl = document.activeElement;
+                    document.getElementById('modal-overlay').style.display = 'flex';
+                    document.getElementById('modal-confirm-btn').focus();
+
+                } catch (e) {
+                    showToast("Invalid JSON.", 5000);
+                }
+            };
+            r.readAsText(e.target.files[0]);
+            e.target.value = ''; // Reset so same file can be re-imported
+        }
+
         function confirmAction() {
             const tab = tabs.find(x => x.id === activeTabId);
             if (pendingAction === 'clear') {
+                // Store undo snapshot
+                _undoSnapshot = { vars: JSON.parse(JSON.stringify(tab.vars)), ts: JSON.parse(JSON.stringify(tab.ts)) };
+                clearTimeout(_undoTimer);
+                _undoTimer = setTimeout(() => { _undoSnapshot = null; }, 5000);
+
                 tab.vars = {}; tab.ts = {}; extractVariables();
+                closeModal(); saveCurrentTabData();
+
+                showToast(i18n[currentLang].cleared, 5000, {
+                    undoFn: () => {
+                        if (_undoSnapshot) {
+                            const t = tabs.find(x => x.id === activeTabId);
+                            if (t) {
+                                t.vars = _undoSnapshot.vars;
+                                t.ts = _undoSnapshot.ts;
+                                extractVariables();
+                                saveCurrentTabData();
+                                _undoSnapshot = null;
+                            }
+                        }
+                    }
+                });
+                return;
             } else if (pendingAction === 'delete') {
                 tabs = tabs.filter(x => x.id !== pendingDeleteId);
                 if (tabs.length > 0) activeTabId = tabs[0].id;
                 renderTabs(); loadActiveTabData();
             } else if (pendingAction === 'clear_storage') {
-                localStorage.clear();
-                const defaultTab = { id: 't1', name: 'Claude Flow', system: '', template: '{{VP_SPEC}}\n{{LAST_RES}}', vars: {}, useSystem: false, collapsedStates: {}, ts: {} };
+                // Only remove app-specific keys
+                APP_KEYS.forEach(key => localStorage.removeItem(key));
+                const defaultTab = { id: 't1', name: 'New Prompt Template', system: '', template: '{{VP_SPEC}}\n{{LAST_RES}}', vars: {}, useSystem: false, collapsedStates: {}, ts: {} };
                 localStorage.setItem('modular_flows_v12', JSON.stringify([defaultTab]));
                 localStorage.setItem('active_tab_id_v12', defaultTab.id);
                 localStorage.setItem('modular_shared_v12', JSON.stringify({ vars: {}, ts: {} }));
                 location.reload();
                 return;
+            } else if (pendingAction === 'import') {
+                if (_pendingImport) {
+                    tabs = _pendingImport.tabs;
+                    sharedStore = _pendingImport.shared;
+                    saveSharedStore();
+                    if (tabs[0]) activeTabId = tabs[0].id;
+                    renderTabs(); loadActiveTabData();
+                    _pendingImport = null;
+                }
             }
             closeModal(); saveCurrentTabData();
         }
 
         /* --- Standard Components --- */
-        function renderTabs() { document.getElementById('tabs-list').innerHTML = tabs.map(t => `<div class="tab ${t.id === activeTabId ? 'active' : ''}" draggable="true" ondragstart="handleDragStart(event, '${t.id}')" ondragover="handleDragOver(event)" ondrop="handleDrop(event, '${t.id}')" onclick="switchTab('${t.id}')" ondblclick="enableRename('${t.id}')"><span id="tab-text-${t.id}">${t.name}</span><input class="tab-input hidden tab-rename-input" id="tab-input-${t.id}" value="${t.name}" onblur="finishRename('${t.id}')" onkeydown="if(event.key==='Enter') finishRename('${t.id}')"><span class="tab-close" onclick="requestDeleteTab(event, '${t.id}')">✕</span></div>`).join(''); }
-        function switchTab(id) { if (id === activeTabId) return; saveCurrentTabData(); activeTabId = id; renderTabs(); loadActiveTabData(); }
-        function addNewTab() { const newId = 't' + Date.now(); tabs.push({ id: newId, name: 'New Flow', system: '', template: '{{INPUT}}', vars: {}, useSystem: false, collapsedStates: {}, ts: {} }); switchTab(newId); }
+        function renderTabs() {
+            const filteredTabs = _searchFilter
+                ? tabs.filter(t => t.name.toLowerCase().includes(_searchFilter))
+                : tabs;
+
+            document.getElementById('tabs-list').innerHTML = filteredTabs.map(t => `<div class="tab ${t.id === activeTabId ? 'active' : ''}" role="tab" tabindex="0" aria-selected="${t.id === activeTabId}" draggable="true" ondragstart="handleDragStart(event, '${t.id}')" ondragover="handleDragOver(event)" ondrop="handleDrop(event, '${t.id}')" onclick="switchTab('${t.id}')" ondblclick="enableRename('${t.id}')" onkeydown="handleTabKeydown(event, '${t.id}')"><span class="tab-label" id="tab-text-${t.id}">${t.name}</span><input class="tab-input hidden tab-rename-input" id="tab-input-${t.id}" value="${t.name}" onblur="finishRename('${t.id}')" onkeydown="if(event.key==='Enter') finishRename('${t.id}')"><span class="tab-actions"><button type="button" class="tab-action-btn duplicate" onclick="duplicateTab(event, '${t.id}')" title="${i18n[currentLang].duplicate}" aria-label="${i18n[currentLang].duplicate}">&#9783;</button><button type="button" class="tab-action-btn close" onclick="requestDeleteTab(event, '${t.id}')" aria-label="Delete">&#10005;</button></span></div>`).join('');
+        }
+        function handleTabKeydown(e, id) {
+            if (e.target !== e.currentTarget) return;
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                switchTab(id);
+            }
+        }
+        function switchTab(id) {
+            if (id === activeTabId) return;
+            saveCurrentTabData();
+            activeTabId = id;
+            renderTabs(); loadActiveTabData();
+            closeMobileSidebar();
+        }
+        function addNewTab() {
+            const newId = 't' + Date.now();
+            tabs.push({ id: newId, name: 'New Flow', system: '', template: '', vars: {}, useSystem: false, collapsedStates: {}, ts: {} });
+            switchTab(newId);
+        }
+        function duplicateTab(e, id) {
+            e.stopPropagation();
+            const src = tabs.find(t => t.id === id);
+            if (!src) return;
+            const newId = 't' + Date.now();
+            const copy = JSON.parse(JSON.stringify(src));
+            copy.id = newId;
+            copy.name = 'Copy of ' + src.name;
+            tabs.push(copy);
+            switchTab(newId);
+        }
         function toggleSystem(f) { const c = document.getElementById('system-check'); const v = f !== undefined ? f : c.checked; c.checked = v; document.getElementById('systemPrompt-wrapper').className = v ? 'editor-wrapper' : 'editor-wrapper hidden'; saveCurrentTabData(); }
         function toggleTheme() { isDarkMode = !isDarkMode; document.body.classList.toggle('light-theme', !isDarkMode); localStorage.setItem('theme_mode_v12', isDarkMode ? 'dark' : 'light'); updateUIStrings(); }
         function toggleLang() { currentLang = (currentLang === 'en' ? 'es' : 'en'); localStorage.setItem('app_lang_v12', currentLang); updateUIStrings(); extractVariables(); }
-        function requestDeleteTab(e, id) { e.stopPropagation(); if (tabs.length > 1) { pendingDeleteId = id; showModal('delete'); } else showModal('alert', i18n[currentLang].msg_last_tab); }
-        function showModal(type, msg) { pendingAction = type; const c = document.getElementById('modal-confirm-btn'), x = document.getElementById('modal-cancel-btn'), t = document.getElementById('modal-text'), u = document.getElementById('tutorial-content'); u.classList.add('hidden'); t.classList.remove('hidden'); if (type === 'alert') { t.innerText = msg; c.innerText = i18n[currentLang].ok; x.style.display = 'none'; } else { t.innerText = i18n[currentLang][`msg_${type}`]; c.innerText = i18n[currentLang].confirm; x.innerText = i18n[currentLang].cancel; x.style.display = 'block'; } document.getElementById('modal-overlay').style.display = 'flex'; }
-        function closeModal() { document.getElementById('modal-overlay').style.display = 'none'; }
-        function showStatus(txt) { const s = document.getElementById('status'); s.innerText = txt; s.style.visibility = 'visible'; setTimeout(() => s.style.visibility = 'hidden', 2000); }
+        function requestDeleteTab(e, id) { e.stopPropagation(); if (tabs.length > 1) { pendingDeleteId = id; showModal('delete'); } else showToast(i18n[currentLang].msg_last_tab, 3000); }
+
+        function showModal(type, msg) {
+            pendingAction = type;
+            const c = document.getElementById('modal-confirm-btn'), x = document.getElementById('modal-cancel-btn'), t = document.getElementById('modal-text');
+            const u = document.getElementById('tutorial-content');
+            const p = document.getElementById('preview-panel');
+            const s = document.getElementById('import-summary');
+            u.classList.add('hidden'); p.classList.add('hidden'); s.classList.add('hidden');
+            t.classList.remove('hidden');
+            if (type === 'alert') {
+                t.innerText = msg; c.innerText = i18n[currentLang].ok; x.style.display = 'none';
+            } else {
+                t.innerText = i18n[currentLang][`msg_${type}`]; c.innerText = i18n[currentLang].confirm; x.innerText = i18n[currentLang].cancel; x.style.display = 'block';
+            }
+            _modalTriggerEl = document.activeElement;
+            document.getElementById('modal-overlay').style.display = 'flex';
+            c.focus();
+        }
+        function closeModal() {
+            document.getElementById('modal-overlay').style.display = 'none';
+            if (_modalTriggerEl && _modalTriggerEl.focus) _modalTriggerEl.focus();
+            _modalTriggerEl = null;
+        }
         function triggerImport() { document.getElementById('importFile').click(); }
-        function importData(e) { const r = new FileReader(); r.onload = x => { try { const parsed = JSON.parse(x.target.result); if (Array.isArray(parsed)) { tabs = parsed; } else { tabs = parsed.tabs || []; if (parsed.sharedStore) { sharedStore = parsed.sharedStore; saveSharedStore(); } } if (tabs[0]) activeTabId = tabs[0].id; renderTabs(); loadActiveTabData(); } catch (e) { showModal('alert', "Invalid JSON."); } }; r.readAsText(e.target.files[0]); }
-        function toggleSection(id) { const el = document.getElementById(id); el.classList.toggle('collapsed'); const t = tabs.find(x => x.id === activeTabId); if (t) t.collapsedStates[id] = el.classList.contains('collapsed'); saveCurrentTabData(); }
+        function toggleSection(id) {
+            const el = document.getElementById(id);
+            el.classList.toggle('collapsed');
+            const t = tabs.find(x => x.id === activeTabId);
+            const isCollapsed = el.classList.contains('collapsed');
+            if (t) t.collapsedStates[id] = isCollapsed;
+            const btn = document.querySelector(`[aria-controls="${id}"]`);
+            if (btn) btn.setAttribute('aria-expanded', !isCollapsed);
+            saveCurrentTabData();
+        }
         function updateUIStrings() {
             const t = i18n[currentLang];
-            // Menu dropdown buttons
             document.getElementById('btn-theme-toggle').innerText = isDarkMode ? t.theme_dark : t.theme_light;
             document.getElementById('btn-lang-toggle').innerText = t.lang;
             document.getElementById('btn-tutorial-trigger').innerText = t.tutorial;
             document.getElementById('lang-export').innerText = t.export;
             document.getElementById('lang-import').innerText = t.import;
             document.getElementById('lang-clear-storage').innerText = t.clear_storage;
-            // Nav sidebar
             document.querySelector('#nav-header-action > span:first-child').innerText = t.flows;
             document.getElementById('add-tab-action').innerText = t.new_flow;
-            // Workspace sections
-            document.getElementById('lang-toggle-sys').innerText = t.toggle_sys;
-            document.getElementById('lang-toggle-tpl').innerText = t.toggle_tpl;
+            document.getElementById('lang-toggle-sys').innerHTML = t.toggle_sys;
+            document.getElementById('lang-toggle-tpl').innerHTML = t.toggle_tpl;
             document.getElementById('lang-enable-sys').innerText = t.enable_sys;
+            document.getElementById('lang-preview').innerText = t.preview;
             document.getElementById('lang-generate').innerText = t.generate;
             document.getElementById('systemPrompt').placeholder = t.sys_placeholder;
-            document.getElementById('status').innerText = t.status_ready;
-            // Cog dropdown buttons
+            document.getElementById('template').placeholder = t.tpl_placeholder;
             document.getElementById('lang-md').innerText = t.download_md;
+            document.getElementById('lang-dl-output').innerText = t.dl_output;
             document.getElementById('lang-copy-sys').innerText = t.copy_sys;
             document.getElementById('lang-clear').innerText = t.clear;
-            // Update counts to refresh "Total Pipeline" / "Modified" labels
+            document.getElementById('flow-search').placeholder = t.search_placeholder;
             updateCounts();
         }
         function downloadMarkdown() { const t = tabs.find(x => x.id === activeTabId); const c = document.getElementById('template').value; const b = new Blob([c], { type: 'text/markdown' }); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = `${t.name}.md`; a.click(); }
-        function copySystemOnly() { navigator.clipboard.writeText(document.getElementById('systemPrompt').value).then(() => showStatus(i18n[currentLang].status_sys_copied)); }
+        function copySystemOnly() { navigator.clipboard.writeText(document.getElementById('systemPrompt').value).then(() => showToast(i18n[currentLang].status_sys_copied)); }
         function setupEditorListeners() {
-            // Disconnect all previous ResizeObservers to prevent leaks
             _resizeObservers.forEach(ro => ro.disconnect());
             _resizeObservers = [];
 
             document.querySelectorAll('.editor').forEach(a => {
-                // Skip editors that already have event listeners attached
                 if (_editorListenersAttached.has(a)) {
-                    // Still need ResizeObserver for existing editors (old ones were disconnected above)
                     const ro = new ResizeObserver(() => syncLineNumberHeight(a));
                     ro.observe(a);
                     _resizeObservers.push(ro);
@@ -1127,10 +1989,6 @@
             const lines = textarea.value.split('\n').length;
             linesEl.innerHTML = Array.from({ length: lines }, (_, i) => i + 1).join('<br>');
             syncLineNumberScroll(textarea);
-            updateMaxHeight(textarea);
-        }
-        function updateMaxHeight(textarea) {
-            // no-op: removed maxHeight constraint that prevented manual resize
         }
         function syncLineNumberScroll(textarea) {
             let linesEl = getLineNumbersEl(textarea);
@@ -1145,10 +2003,26 @@
             if (textarea.id === 'template') return document.getElementById('template-lines');
             return document.getElementById(textarea.getAttribute('data-lines-id'));
         }
-        function showTutorial() { const t = i18n[currentLang]; const m = document.getElementById('modal-text'); const u = document.getElementById('tutorial-content'); m.classList.add('hidden'); u.innerHTML = `<h2>${t.tut_title}</h2>${t.tut_body}`; u.classList.remove('hidden'); document.getElementById('modal-confirm-btn').innerText = t.ok; document.getElementById('modal-cancel-btn').style.display = 'none'; document.getElementById('modal-overlay').style.display = 'flex'; pendingAction = 'alert'; }
+        function showTutorial() {
+            const t = i18n[currentLang];
+            const m = document.getElementById('modal-text');
+            const u = document.getElementById('tutorial-content');
+            const p = document.getElementById('preview-panel');
+            const s = document.getElementById('import-summary');
+            m.classList.add('hidden'); p.classList.add('hidden'); s.classList.add('hidden');
+            u.innerHTML = `<h2>${t.tut_title}</h2>${t.tut_body}`;
+            u.classList.remove('hidden');
+            document.getElementById('modal-confirm-btn').innerText = t.ok;
+            document.getElementById('modal-cancel-btn').style.display = 'none';
+            pendingAction = 'alert';
+
+            _modalTriggerEl = document.activeElement;
+            document.getElementById('modal-overlay').style.display = 'flex';
+            document.getElementById('modal-confirm-btn').focus();
+        }
 
         function enableRename(id) { const span = document.getElementById('tab-text-' + id); const input = document.getElementById('tab-input-' + id); span.classList.add('hidden'); input.classList.remove('hidden'); input.focus(); input.select(); }
-        function finishRename(id) { const input = document.getElementById('tab-input-' + id); const span = document.getElementById('tab-text-' + id); const t = tabs.find(x => x.id === id); if (t && input.value.trim()) t.name = input.value.trim(); input.classList.add('hidden'); span.classList.remove('hidden'); renderTabs(); saveCurrentTabData(); }
+        function finishRename(id) { const input = document.getElementById('tab-input-' + id); const span = document.getElementById('tab-text-' + id); const t = tabs.find(x => x.id === id); if (t && input.value.trim()) t.name = input.value.trim(); input.classList.add('hidden'); span.classList.remove('hidden'); renderTabs(); saveCurrentTabData(); updateMobileFlowName(); }
 
         window.onload = init;
     </script>
