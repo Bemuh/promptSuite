@@ -443,8 +443,10 @@
             border-radius: 12px;
             border: 1px solid var(--border-color);
             text-align: center;
-            max-width: 550px;
+            max-width: 650px;
             width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
             color: var(--text-main);
         }
 
@@ -602,7 +604,78 @@
                 msg_clear_storage: "Permanently delete ALL tabs and local settings? This cannot be undone.",
                 msg_last_tab: "Cannot delete the last remaining tab.",
                 tut_title: "Tutorial: AI Flow Studio",
-                tut_body: "<h3>1. Dynamic Variables</h3>Inputs spawn automatically for any <code>{{TAG}}</code> in your template.<h3>2. Shared Variables</h3>Use <code>{{SHARED:name}}</code> for variables shared across all flows.<h3>3. Flow Linking</h3>Use <code>{{TAB:FlowName}}</code> to include the result of another flow."
+                tut_body: `
+<div style="text-align:left; line-height:1.7; font-size:0.85rem;">
+
+<h3 style="color:var(--accent-blue); margin-top:0;">Getting Started</h3>
+<p>AI Flow Studio helps you build reusable, modular prompts for AI assistants. Instead of rewriting prompts from scratch every time, you create <strong>templates</strong> with placeholders that get filled in automatically.</p>
+
+<h3 style="color:var(--accent-blue);">1. Flows (Tabs)</h3>
+<p>Each <strong>flow</strong> is an independent prompt workspace shown in the left sidebar.</p>
+<ul>
+  <li><strong>Create a flow:</strong> Click <em>"+ New Flow"</em> at the top of the sidebar.</li>
+  <li><strong>Switch flows:</strong> Click on any flow name in the sidebar.</li>
+  <li><strong>Rename a flow:</strong> Double-click the flow name to edit it.</li>
+  <li><strong>Reorder flows:</strong> Drag and drop flows in the sidebar to rearrange them.</li>
+  <li><strong>Delete a flow:</strong> Click the <strong>✕</strong> button on a flow tab. You cannot delete the last remaining flow.</li>
+</ul>
+
+<h3 style="color:var(--accent-blue);">2. System Block</h3>
+<p>The <strong>System Block</strong> lets you define a system-level persona or rules (e.g., "You are a helpful coding assistant").</p>
+<ul>
+  <li>Check the <em>"Enable System Prompt Block"</em> checkbox to show the editor.</li>
+  <li>When enabled, the generated output will include a <code>SYSTEM:</code> and <code>USER:</code> section.</li>
+  <li>You can collapse this section by clicking its header.</li>
+</ul>
+
+<h3 style="color:var(--accent-blue);">3. Instruction Template</h3>
+<p>This is the main body of your prompt. Write your instructions here and use <strong>placeholders</strong> to make them reusable.</p>
+<ul>
+  <li>Type any <code>{{TAG_NAME}}</code> and an input field for that variable will appear automatically below.</li>
+  <li>You can collapse this section by clicking its header.</li>
+</ul>
+
+<h3 style="color:var(--accent-blue);">4. Dynamic Variables</h3>
+<p>Any <code>{{TAG}}</code> in your template creates an input field automatically. Fill in the value and it will be injected when you generate.</p>
+<p><strong>Example:</strong> A template like <code>Translate {{TEXT}} to {{LANGUAGE}}</code> creates two input fields: one for TEXT and one for LANGUAGE.</p>
+
+<h3 style="color:var(--accent-blue);">5. Shared Variables</h3>
+<p>Use <code>{{SHARED:name}}</code> for variables that are shared across <strong>all</strong> flows. If you update a shared variable in one flow, the change applies everywhere.</p>
+<p><strong>Example:</strong> <code>{{SHARED:project_context}}</code> lets you define your project context once and reuse it in every flow.</p>
+
+<h3 style="color:var(--accent-blue);">6. Flow Linking</h3>
+<p>Use <code>{{TAB:FlowName}}</code> to include the <strong>generated output</strong> of another flow inside your current template. This lets you chain prompts together into a pipeline.</p>
+<p><strong>Example:</strong> If you have a flow named "Outline", you can reference it with <code>{{TAB:Outline}}</code> in another flow.</p>
+<p><em>Note:</em> Circular dependencies (Flow A referencing Flow B, which references Flow A) are detected and will show an error.</p>
+
+<h3 style="color:var(--accent-blue);">7. Generate & Copy</h3>
+<p>Click <strong>"Generate & Copy Prompt"</strong> to assemble your final prompt with all variables resolved and copy it to the clipboard, ready to paste into any AI chat.</p>
+
+<h3 style="color:var(--accent-blue);">8. Extra Tools (⚙ Menu)</h3>
+<ul>
+  <li><strong>Download .md:</strong> Save the current template as a Markdown file.</li>
+  <li><strong>Copy Sys Only:</strong> Copy just the system prompt to the clipboard.</li>
+  <li><strong>Clear Inputs:</strong> Reset all input fields in the current flow (template and variables stay, values are cleared).</li>
+</ul>
+
+<h3 style="color:var(--accent-blue);">9. Settings (☰ Sidebar Menu)</h3>
+<ul>
+  <li><strong>Theme:</strong> Switch between Dark and Light mode.</li>
+  <li><strong>Language:</strong> Switch between English and Spanish.</li>
+  <li><strong>Export Config:</strong> Download all your flows and shared variables as a JSON file for backup or sharing.</li>
+  <li><strong>Import Config:</strong> Load a previously exported JSON file to restore your flows.</li>
+  <li><strong>Clear Studio Data:</strong> Delete all flows, variables, and settings. <em>This cannot be undone.</em></li>
+</ul>
+
+<h3 style="color:var(--accent-blue);">10. Tips</h3>
+<ul>
+  <li>All data is saved automatically in your browser (localStorage).</li>
+  <li>Each field shows a <em>"Modified"</em> timestamp so you know when it was last edited.</li>
+  <li>The info bar at the bottom shows character counts for System, Template, and Dynamic Variables.</li>
+  <li>Press <strong>Tab</strong> inside any editor to insert a tab character instead of moving focus.</li>
+  <li>Press <strong>Enter</strong> to auto-indent based on the current line's indentation.</li>
+</ul>
+</div>`
             },
             es: {
                 theme_dark: "Tema: Oscuro", theme_light: "Tema: Claro", lang: "Idioma: ES", tutorial: "Tutorial / Ayuda",
@@ -621,7 +694,78 @@
                 msg_clear_storage: "¿Eliminar TODAS las pestañas y configuraciones locales? Esto no se puede deshacer.",
                 msg_last_tab: "No se puede eliminar la única pestaña restante.",
                 tut_title: "Tutorial: AI Flow Studio",
-                tut_body: "<h3>1. Variables Dinámicas</h3>Los campos aparecen según los <code>{{TAGS}}</code> en tu plantilla.<h3>2. Variables Compartidas</h3>Usa <code>{{SHARED:nombre}}</code> para variables compartidas entre flujos.<h3>3. Enlace de Flujos</h3>Usa <code>{{TAB:NombreFlujo}}</code> para incluir el resultado de otro flujo."
+                tut_body: `
+<div style="text-align:left; line-height:1.7; font-size:0.85rem;">
+
+<h3 style="color:var(--accent-blue); margin-top:0;">Primeros Pasos</h3>
+<p>AI Flow Studio te ayuda a construir prompts reutilizables y modulares para asistentes de IA. En lugar de reescribir prompts desde cero cada vez, creas <strong>plantillas</strong> con marcadores que se completan automáticamente.</p>
+
+<h3 style="color:var(--accent-blue);">1. Flujos (Pestañas)</h3>
+<p>Cada <strong>flujo</strong> es un espacio de trabajo independiente que aparece en la barra lateral izquierda.</p>
+<ul>
+  <li><strong>Crear un flujo:</strong> Haz clic en <em>"+ Nuevo Flujo"</em> en la parte superior de la barra lateral.</li>
+  <li><strong>Cambiar de flujo:</strong> Haz clic en el nombre de cualquier flujo en la barra lateral.</li>
+  <li><strong>Renombrar un flujo:</strong> Haz doble clic en el nombre del flujo para editarlo.</li>
+  <li><strong>Reordenar flujos:</strong> Arrastra y suelta los flujos en la barra lateral para reorganizarlos.</li>
+  <li><strong>Eliminar un flujo:</strong> Haz clic en el botón <strong>✕</strong> de la pestaña. No se puede eliminar el último flujo restante.</li>
+</ul>
+
+<h3 style="color:var(--accent-blue);">2. Bloque de Sistema</h3>
+<p>El <strong>Bloque de Sistema</strong> te permite definir una persona o reglas a nivel de sistema (ej: "Eres un asistente de programación útil").</p>
+<ul>
+  <li>Marca la casilla <em>"Habilitar Bloque de Sistema"</em> para mostrar el editor.</li>
+  <li>Cuando está habilitado, la salida generada incluirá secciones <code>SYSTEM:</code> y <code>USER:</code>.</li>
+  <li>Puedes colapsar esta sección haciendo clic en su encabezado.</li>
+</ul>
+
+<h3 style="color:var(--accent-blue);">3. Plantilla de Instrucción</h3>
+<p>Este es el cuerpo principal de tu prompt. Escribe tus instrucciones aquí y usa <strong>marcadores</strong> para hacerlas reutilizables.</p>
+<ul>
+  <li>Escribe cualquier <code>{{NOMBRE_TAG}}</code> y un campo de entrada para esa variable aparecerá automáticamente debajo.</li>
+  <li>Puedes colapsar esta sección haciendo clic en su encabezado.</li>
+</ul>
+
+<h3 style="color:var(--accent-blue);">4. Variables Dinámicas</h3>
+<p>Cualquier <code>{{TAG}}</code> en tu plantilla crea un campo de entrada automáticamente. Completa el valor y se inyectará cuando generes el prompt.</p>
+<p><strong>Ejemplo:</strong> Una plantilla como <code>Traduce {{TEXTO}} al {{IDIOMA}}</code> crea dos campos: uno para TEXTO y otro para IDIOMA.</p>
+
+<h3 style="color:var(--accent-blue);">5. Variables Compartidas</h3>
+<p>Usa <code>{{SHARED:nombre}}</code> para variables compartidas entre <strong>todos</strong> los flujos. Si actualizas una variable compartida en un flujo, el cambio se aplica en todos.</p>
+<p><strong>Ejemplo:</strong> <code>{{SHARED:contexto_proyecto}}</code> te permite definir el contexto de tu proyecto una vez y reutilizarlo en cada flujo.</p>
+
+<h3 style="color:var(--accent-blue);">6. Enlace de Flujos</h3>
+<p>Usa <code>{{TAB:NombreFlujo}}</code> para incluir la <strong>salida generada</strong> de otro flujo dentro de tu plantilla actual. Esto te permite encadenar prompts en un pipeline.</p>
+<p><strong>Ejemplo:</strong> Si tienes un flujo llamado "Esquema", puedes referenciarlo con <code>{{TAB:Esquema}}</code> en otro flujo.</p>
+<p><em>Nota:</em> Las dependencias circulares (Flujo A referencia a Flujo B, que referencia a Flujo A) se detectan y mostrarán un error.</p>
+
+<h3 style="color:var(--accent-blue);">7. Generar y Copiar</h3>
+<p>Haz clic en <strong>"Generar y Copiar Prompt"</strong> para ensamblar tu prompt final con todas las variables resueltas y copiarlo al portapapeles, listo para pegar en cualquier chat de IA.</p>
+
+<h3 style="color:var(--accent-blue);">8. Herramientas Extra (Menú ⚙)</h3>
+<ul>
+  <li><strong>Descargar .md:</strong> Guarda la plantilla actual como archivo Markdown.</li>
+  <li><strong>Copiar Sys:</strong> Copia solo el prompt de sistema al portapapeles.</li>
+  <li><strong>Limpiar Campos:</strong> Reinicia todos los campos del flujo actual (la plantilla permanece, los valores se borran).</li>
+</ul>
+
+<h3 style="color:var(--accent-blue);">9. Configuración (Menú ☰ de la Barra Lateral)</h3>
+<ul>
+  <li><strong>Tema:</strong> Cambia entre modo Oscuro y Claro.</li>
+  <li><strong>Idioma:</strong> Cambia entre Inglés y Español.</li>
+  <li><strong>Exportar Config:</strong> Descarga todos tus flujos y variables compartidas como archivo JSON para respaldo o compartir.</li>
+  <li><strong>Importar Config:</strong> Carga un archivo JSON previamente exportado para restaurar tus flujos.</li>
+  <li><strong>Borrar Datos del Studio:</strong> Elimina todos los flujos, variables y configuraciones. <em>Esto no se puede deshacer.</em></li>
+</ul>
+
+<h3 style="color:var(--accent-blue);">10. Consejos</h3>
+<ul>
+  <li>Todos los datos se guardan automáticamente en tu navegador (localStorage).</li>
+  <li>Cada campo muestra una marca de tiempo <em>"Modificado"</em> para saber cuándo se editó por última vez.</li>
+  <li>La barra de información inferior muestra el conteo de caracteres para Sistema, Plantilla y Variables Dinámicas.</li>
+  <li>Presiona <strong>Tab</strong> dentro de cualquier editor para insertar un carácter de tabulación en lugar de mover el foco.</li>
+  <li>Presiona <strong>Enter</strong> para auto-indentar basándose en la indentación de la línea actual.</li>
+</ul>
+</div>`
             }
         };
 
